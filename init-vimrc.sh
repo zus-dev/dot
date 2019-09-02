@@ -1,4 +1,6 @@
 #!/bin/bash
+# Before running the script, see os specific dependencies:
+# ubuntu-wsl.md
 # TODO: check prerequisites - git, cmake, python-dev
 VIMRC_FILE=~/.vimrc
 VIMRC_DOT_FILE=./vimrc
