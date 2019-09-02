@@ -27,4 +27,6 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 # fix ugly folder color on the Ubuntu
+# How do I change the color for directories with ls in the console?
+# https://askubuntu.com/questions/466198/how-do-i-change-the-color-for-directories-with-ls-in-the-console
 export LS_COLORS="$LS_COLORS:ow=1;34:tw=1;34:"
