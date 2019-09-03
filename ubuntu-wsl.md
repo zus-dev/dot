@@ -12,3 +12,8 @@ sudo apt-get install python-dev
 curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt-get install nodejs
 ```
+
+# Install exuberant-ctags
+```
+sudo apt-get install exuberant-ctags
+```
