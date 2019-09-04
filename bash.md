@@ -798,3 +798,23 @@ df -h
 ```
 script
 ```
+
+## In centos,how to switch to default gcc after switched to a higher version of gcc with devtoolset
+```
+# Not sure if the command below is needed:
+# yum install centos-release-scl-rh
+yum install devtoolset-7
+yum install centos-release-scl
+scl enable devtoolset-7 bash
+```
+
+
+## mount a ftp host as a local directory
+```
+curlftpfs IP:PORT ./MOUNT-POINT
+```
+
+## start ftpd on the specific folder
+```
+tcpsvd -vE 0.0.0.0 1024 ftpd -w /FOLDER
+```
