@@ -254,6 +254,9 @@ Plugin 'pangloss/vim-javascript'
 " quickly and easily switch between buffers
 " Plugin 'jlanzarotta/bufexplorer'
 
+" Python IDE
+Plugin 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -270,6 +273,11 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 " END: Vundle
 
+
+" Pymode config
+let g:pymode_rope = 1
+let g:pymode_rope_goto_definition_bind='<Leader>rg'
+let g:pymode_rope_rename_bind = '<Leader>rr'
 
 " YouCompleteMe config
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
