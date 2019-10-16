@@ -139,6 +139,11 @@ sudo service cloudistics-network-controller status
 ```bash
 # Clean /var/lib/docker/overlay2 
 sudo docker system prune -a -f
+
+docker info
+docker history
+docker container inspect
+docker commit 
 ```
 
 ## OS version
@@ -465,6 +470,7 @@ nm -T /usr/bin/cloudistics-storage-controller | grep boost
 ## Copy with stats and progress
 ```
 rsync --info=progress2 source dest
+rsync -aP --info=progress2 source dest
 ```
 
 ```
