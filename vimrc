@@ -25,7 +25,7 @@ autocmd FileType javascript.jsx setlocal shiftwidth=2 tabstop=2
 :set ttyfast
 
 " Long lines make VIM slow
-:set synmaxcol=200
+:set synmaxcol=255
 
 " folding
 " anything other than 'syntax'
@@ -250,7 +250,9 @@ Plugin 'scrooloose/nerdtree'
 
 " Vastly improved Javascript indentation and syntax support in Vim.
 Plugin 'pangloss/vim-javascript'
-Plugin 'mxw/vim-jsx'
+
+" quickly and easily switch between buffers
+" Plugin 'jlanzarotta/bufexplorer'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
