@@ -31,6 +31,11 @@ autocmd FileType javascript.jsx setlocal shiftwidth=2 tabstop=2
 " anything other than 'syntax'
 set foldmethod=indent
 
+" list of options for Insert mode completion
+" Use the popup menu also when there is only one match.
+" preview - opens a preview windows Ctrl-w z to close the preview window
+set completeopt=menuone,noinsert,noselect
+
 " Show vertical line 
 " set colorcolumn=120
 
@@ -170,12 +175,12 @@ hi Visual cterm=NONE ctermfg=black ctermbg=white
 " enable omni completion using a syntax file:
 " setlocal omnifunc=syntaxcomplete#Complete
 " enable omni if it is not set yet:
-if has("autocmd") && exists("+omnifunc")
-  autocmd Filetype *
-          \ if &omnifunc == "" |
-          \     setlocal omnifunc=syntaxcomplete#Complete |
-          \ endif
-endif
+" if has("autocmd") && exists("+omnifunc")
+"   autocmd Filetype *
+"           \ if &omnifunc == "" |
+"           \     setlocal omnifunc=syntaxcomplete#Complete |
+"           \ endif
+" endif
 
 " BEGIN: Vundle
 set nocompatible              " be iMproved, required
@@ -208,7 +213,7 @@ Plugin 'tpope/vim-fugitive'
 " Plugin 'ascenator/L9', {'name': 'newL9'}
 
 " YouCompleteMe
-Plugin 'Valloric/YouCompleteMe'
+" Plugin 'Valloric/YouCompleteMe'
 
 " Cheat sheet 
 "Plugin 'dbeniamine/cheat.sh-vim'
@@ -278,6 +283,10 @@ filetype plugin indent on    " required
 let g:pymode_rope = 1
 let g:pymode_rope_goto_definition_bind='<Leader>rg'
 let g:pymode_rope_rename_bind = '<Leader>rr'
+let g:pymode_run_bind = '<leader>rR'
+let g:pymode_rope_show_doc_bind = '<Leader>rd'
+let g:pymode_breakpoint_bind = '<leader>rb'
+" let g:pymode_python = 'python'
 
 " YouCompleteMe config
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
@@ -307,6 +316,10 @@ let g:ycm_show_diagnostics_ui = 0
 "augroup END
 
 fun! ToggleCC()
+  if &filetype == 'python'
+      return
+  endif
+
   if &cc == ''
     set colorcolumn=120
   else

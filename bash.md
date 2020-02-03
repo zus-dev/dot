@@ -146,6 +146,96 @@ docker container inspect
 docker commit 
 
 alias python-vim='docker run -it --rm -v $(pwd):/src --workdir /src fedeg/python-vim:latest'
+
+# detach from running container shell 
+ctrl+p,ctrl+q
+
+# bash into running container 
+docker exec -it {container} /bin/bash
+```
+
+## Kubernetes
+```bash
+# Getting a shell to a pod 
+kubectl exec -it <pod-name> -- /bin/bash
+# Getting a shell to a specific container inside the pod
+kubectl exec -it <pod-name> -c <container-name> -- /bin/bash
+# Getting logs out of pod
+kubectl logs <pod-name>
+# List containers by Pod
+kubectl get pods --all-namespaces -o=jsonpath='{range .items[*]}{"\n"}{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' | sort
+# Get a bit more details abouht the pods 
+kubectl get pods -o wide
+# Get detailed info about the pod 
+kubectl describe pod <pod-name>
+
+
+kubectl get namespaces
+kubectl create namespace pod-example
+# creates multi-container pod "examplepod" within the namespace "pod-example"
+kubectl create -f ./pod-example.yaml
+kubectl --namespace=pod-example get pods
+kubectl --namespace=pod-example delete pod examplepod
+kubectl delete namespace pod-example
+
+
+# run an image interactively
+kubectl run curler -it --rm --image=pstauffer/curl --restart=Never -- sh
+```
+
+## Minicube
+```bash
+minicube ip
+
+# How to use local docker images with Minikube? (Another way is to use Telepresense --swap-deployment
+# Start minikube
+minikube start
+# Set docker env
+eval $(minikube docker-env)
+# Build image
+docker build -t foo:0.0.1 .
+# Run in minikube. Set the imagePullPolicy to Never, otherwise Kubernetes will try to download the image.
+kubectl run hello-foo --image=foo:0.0.1 --image-pull-policy=Never
+# Check that it's running
+kubectl get pods
+
+# scale replicas
+kubectl scale --replicas=1 deployment/composition-orchestration
+
+# cleanup with persistent volumes 
+kubectl delete all --all
+kubectl get pv | tail -n+2 | awk '{print $1}' | xargs -I{} kubectl patch pv {} -p '{"metadata":{"finalizers": null}}'
+
+# cleanup persistent groups
+kubectl get pg | tail -n+2 | awk '{print $1}' | xargs -I{} kubectl patch pg {} --type='merge' -p '{"metadata":{"finalizers": null}}'
+
+
+# Create docker registry secret
+kubectl delete secret --all                                                                                                                                                                                        
+kubectl create secret docker-registry regcred --docker-server=registry1.corp.cloudistics.com --docker-username=dtkachenko --docker-password='PASSWORD' --docker-email=dimitrian.tkachenko@cloudistics.com
+# kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "regcred"}]}'
+kubectl create secret docker-registry regcred2 --docker-server=nexus.corp.cloudistics.com:5000 --docker-username=dtkachenko --docker-password='PASSWORD' --docker-email=dimitrian.tkachenko@cloudistics.com
+# kubectl patch serviceaccount default -p '{"imagePullSecretsNexus": [{"name": "regcred2"}]}'
+```
+
+## Telepresence
+```bash
+# Run local Docker container in the kubernetes claster
+telepresence --swap-deployment composition-fungible-interface --docker-run --rm -it -v $(pwd):/src -u 1000:1000 composition-fungible-interface /bin/bash
+
+# Run local process in the cluster
+# vpn tcp: allows to debug 
+# conntrack and iptables on Linux for the vpn-tcp method
+# https://www.telepresence.io/reference/install#dependencies
+sudo yum install conntrack
+telepresence --swap-deployment composition-fungible-interface --expose 5001 --run python run_fungible_interface.py
+telepresence --swap-deployment composition-orchestration --expose 5002 --run python run_orchestration.py
+
+# local shell using Telepresence that can access that service, even though the process is local but the service is running inside Minikube:
+telepresence --run-shell
+
+# run specified container inside the Minikube:
+telepresence --docker-run -it --rm alpine
 ```
 
 ## OS version
@@ -208,6 +298,12 @@ git log --follow -- filename
 
 # skip git commit hooks
 git commit --no-verify
+
+# remove tag from local 
+git tag -d 0.0.22
+
+# remove tag from remote
+git push origin :refs/tags/0.0.22
 ```
 
 ## Run command periodically
@@ -783,7 +879,7 @@ next
 ```
 
 ## NETCAT
-etworking utility for reading from and writing to network connections using TCP or UDP. 
+Networking utility for reading from and writing to network connections using TCP or UDP. 
 The command is designed to be a dependable back-end that can be used directly or easily driven by other programs and scripts.
 At the same time, it is a feature-rich network debugging and investigation tool, since it can produce almost any kind of connection its user could need and has a number of built-in capabilities.
 ```
@@ -840,4 +936,11 @@ For Fish, add the following to config.fish instead:
 
 Do not forget to remove old dircolors from your shell configuration file if they were named differently than the one newly installed.
 
+```
+
+## misk 
+```
+ps -ev
+mysql -h172.17.0.2  -pmy-secret-pw
+mysql -h172.17.0.2  -pmy-secret-pw ifdb < ifdb-archive.sql
 ```
