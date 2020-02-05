@@ -254,13 +254,16 @@ Plugin 'Konfekt/FastFold'
 Plugin 'scrooloose/nerdtree'
 
 " Vastly improved Javascript indentation and syntax support in Vim.
-Plugin 'pangloss/vim-javascript'
+" Plugin 'pangloss/vim-javascript'
 
 " quickly and easily switch between buffers
 " Plugin 'jlanzarotta/bufexplorer'
 
 " Python IDE
 Plugin 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+
+" Complementary pairs of mappings
+Plugin 'tpope/vim-unimpaired'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required

@@ -154,3 +154,19 @@ jump to previous hunk (change): [c.
 # How to install vim from sources
 ./configure --with-features=huge --enable-python3interp=yes --enable-fail-if-missing
 sudo make install
+
+# How do you use quickfix feature?
+:copen " Open the quickfix window
+:ccl   " Close it
+:cw    " Open it if there are "errors", close it otherwise (some people prefer this)
+:cn    " Go to the next error in the window
+:cp    " Go to the previous error in the window
+:cnf   " Go to the first error in the next file
+
+# How do you use local list feature?
+:lopen to open window containing error/warning lines
+:lnext to jump to next error/warning
+:lprev to jump to previous error/warning
+
+# Moving to matching braces
+% key
