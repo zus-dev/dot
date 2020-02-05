@@ -30,6 +30,8 @@ autocmd FileType javascript.jsx setlocal shiftwidth=2 tabstop=2
 " folding
 " anything other than 'syntax'
 set foldmethod=indent
+" Fix vim to properly indent folds containing Python comment lines
+:set foldignore=
 
 " list of options for Insert mode completion
 " Use the popup menu also when there is only one match.
