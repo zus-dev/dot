@@ -271,6 +271,14 @@ Plugin 'tpope/vim-unimpaired'
 " GitGutter
 Plugin 'airblade/vim-gitgutter'
 
+" Dart language support 
+Plugin 'dart-lang/dart-vim-plugin'
+
+" LSP Language Server Protocol (e.g used for Dart)
+Plugin 'natebosch/vim-lsc'
+" Dart configuration for the LSP (fails with 'Invalid file path')
+" Plugin 'natebosch/vim-lsc-dart'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -287,6 +295,13 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 " END: Vundle
 
+" LSP config
+" The Dart SDK comes with an analysis server that can be run in LSP mode.
+" Make sure dart added to the $PATH
+" bash: $(dirname $(which dart))
+let g:dart = resolve(exepath('dart'))
+let g:lsc_server_commands = {'dart': 'dart '.fnamemodify(g:dart, ':h').'/snapshots/analysis_server.dart.snapshot --lsp'}
+let g:lsc_auto_map = v:true
 
 " Pymode config
 let g:pymode_rope = 1
