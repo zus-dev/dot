@@ -170,3 +170,12 @@ sudo make install
 
 # Moving to matching braces
 % key
+
+
+# GitGutter
+<Leader>hp  " preview the hunk
+
+
+# Open terminal window
+:term
+Ctrl+N - Switch to the Terminal Normal mode

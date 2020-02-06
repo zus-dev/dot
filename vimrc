@@ -7,8 +7,9 @@
 
 " Enable mouse (e.g. for drag-n-drop window borders)
 " :help mouse
-" set mouse=n
-set mouse=""
+set mouse=n
+" default (no mouse)
+" set mouse=""
 set ttymouse=xterm2
 
 filetype plugin indent on
@@ -266,6 +267,9 @@ Plugin 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 
 " Complementary pairs of mappings
 Plugin 'tpope/vim-unimpaired'
+
+" GitGutter
+Plugin 'airblade/vim-gitgutter'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
