@@ -127,6 +127,10 @@ Ctrl-c
 ## Misk 
 cc - commit create
 ca - commit amend
+dd - Perform a :Gdiffsplit on the file under the cursor.
+dv - Perform a :Gvdiffsplit on the file under the cursor.
+
+
 
 ## How can I get the commit message when using Gblame?
 With your cursor on the commit "gutter", just press o
@@ -179,3 +183,7 @@ sudo make install
 # Open terminal window
 :term
 Ctrl+N - Switch to the Terminal Normal mode
+
+
+# Insert output of a system command at the current location
+:r !ls somefilename
