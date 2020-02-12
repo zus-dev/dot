@@ -938,6 +938,9 @@ Do not forget to remove old dircolors from your shell configuration file if they
 
 ```
 
+## Mount NTFS readonly
+sudo mount -t ntfs -o nls=utf8,umask=0222 /dev/nvme0n1p3 /media/c
+
 ## misk 
 ```
 ps -ev
