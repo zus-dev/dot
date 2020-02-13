@@ -929,13 +929,10 @@ tcpsvd -vE 0.0.0.0 1024 ftpd -w /FOLDER
 dir_colors already exists, renaming it to /home/dtkachenko/.dir_colors.old
 
 The new dircolors have been installed as /home/dtkachenko/.dir_colors.
-
 Add "eval `dircolors /path/to/dircolorsdb`" in your shell configuration file (.bashrc, .zshrc, etc...) to use new dircolors.
 For Fish, add the following to config.fish instead:
         eval (dircolors /path/to/dircolorsdb | head -n 1 | sed 's/^LS_COLORS=/set -x LS_COLORS /;s/;$//')
-
 Do not forget to remove old dircolors from your shell configuration file if they were named differently than the one newly installed.
-
 ```
 
 ## Mount NTFS readonly
@@ -957,9 +954,23 @@ chmod -R ug+rw foldername
 ## Change screen resolution
 xrandr --output eDP-1-1 --mode 1280x720
 
+## Volume from terminal 
+```
+alsamixer
+amixer
+```
+
+## Control HiDPI 
+```
+xrandr --output eDP1 --auto --output DP1 --mode 3840x2160 --panning 5120x2880+1920+0 --scale 1.3334x1.3334 --right-of eDP1
+xrandr --output <target> --scale 1x1
+```
+
 ## misk 
 ```
 ps -ev
 mysql -h172.17.0.2  -pmy-secret-pw
 mysql -h172.17.0.2  -pmy-secret-pw ifdb < ifdb-archive.sql
 ```
+
+

@@ -20,6 +20,7 @@ set expandtab
 " :set filetype?
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
 autocmd FileType javascript.jsx setlocal shiftwidth=2 tabstop=2
+autocmd FileType dart setlocal shiftwidth=2 tabstop=2
 
 " try redrawing as fewer times as possible.
 :set lazyredraw 
@@ -128,7 +129,7 @@ set nospell
 " set syntax=markdown
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 
-" Highlight current line
+" Highlight current line (horizontal line)
 set cursorline 
 
 " logs highlight
@@ -173,6 +174,8 @@ hi ColorColumn ctermbg=8
 hi ColorColumn ctermbg=6
 hi Comment cterm=NONE ctermfg=gray
 hi Visual cterm=NONE ctermfg=black ctermbg=white
+" LSClient uses this for Linter
+hi SpellCap cterm=NONE ctermfg=white ctermbg=brown
 
 " completion using a syntax file
 " enable omni completion using a syntax file:
@@ -274,10 +277,20 @@ Plugin 'airblade/vim-gitgutter'
 " Dart language support 
 Plugin 'dart-lang/dart-vim-plugin'
 
-" LSP Language Server Protocol (e.g used for Dart)
+" LSC Language Server Protocol (LSP) Client (e.g used for Dart)
 Plugin 'natebosch/vim-lsc'
+
 " Dart configuration for the LSP (fails with 'Invalid file path')
 " Plugin 'natebosch/vim-lsc-dart'
+
+" ALE Check syntax in Vim asynchronously and fix files, with LSP support
+" This is alternative to vim-lsc
+" You may also consider combining package:dart_language_server with a Language
+" Server Protocol client, like ale.
+" Plugin 'dense-analysis/ale'
+
+" Viewer & Finder for LSP symbols and tags 
+" Plugin 'liuchengxu/vista.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -295,13 +308,31 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 " END: Vundle
 
-" LSP config
+" " Vista config
+" " See :help vista-options for more information.
+" let g:vista_icon_indent = ["▸ ", ""]
+" " Executive used when opening vista sidebar without specifying it.
+" " See all the avaliable executives via `:echo g:vista#executives`.
+" " let g:vista_default_executive = 'vim_lsc'
+" let g:vista_executive_for = {
+"   \ 'dart': 'vim_lsc',
+"   \ }
+" " To enable fzf's preview window set g:vista_fzf_preview.
+" " The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
+" " For example:
+" let g:vista_fzf_preview = ['right:50%']
+" " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
+" let g:vista#renderer#enable_icon = 0
+
+" LSC config
 " The Dart SDK comes with an analysis server that can be run in LSP mode.
 " Make sure dart added to the $PATH
 " bash: $(dirname $(which dart))
 let g:dart = resolve(exepath('dart'))
 let g:lsc_server_commands = {'dart': 'dart '.fnamemodify(g:dart, ':h').'/snapshots/analysis_server.dart.snapshot --lsp'}
+" Set complete default mappings (for the list see doc or github page)
 let g:lsc_auto_map = v:true
+let g:lsc_reference_highlights = v:false
 
 " Pymode config
 let g:pymode_rope = 1
