@@ -941,6 +941,22 @@ Do not forget to remove old dircolors from your shell configuration file if they
 ## Mount NTFS readonly
 sudo mount -t ntfs -o nls=utf8,umask=0222 /dev/nvme0n1p3 /media/c
 
+## apt
+```
+apt list --installed
+```
+
+## FSH description of the file system hierarchy  
+```
+man hier
+```
+
+## Add rw permission recursively
+chmod -R ug+rw foldername
+
+## Change screen resolution
+xrandr --output eDP-1-1 --mode 1280x720
+
 ## misk 
 ```
 ps -ev
