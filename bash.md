@@ -964,6 +964,25 @@ amixer
 ```
 xrandr --output eDP1 --auto --output DP1 --mode 3840x2160 --panning 5120x2880+1920+0 --scale 1.3334x1.3334 --right-of eDP1
 xrandr --output <target> --scale 1x1
+xrandr --output eDP-1-1 --mode 1280x720
+```
+
+# Brightness controll
+```
+xrandr --output eDP-1-1 --brightness 0.5
+xbacklight -inc 10
+```
+
+# keyboard brightness 
+```
+echo 0 | sudo tee /sys/class/leds/dell\:\:kbd_backlight/brightness
+echo 1 | sudo tee /sys/class/leds/dell\:\:kbd_backlight/brightness
+echo 2 | sudo tee /sys/class/leds/dell\:\:kbd_backlight/brightness
+```
+
+# night-mode 
+```
+redshift
 ```
 
 ## misk 
