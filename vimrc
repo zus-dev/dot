@@ -21,6 +21,7 @@ set expandtab
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
 autocmd FileType javascript.jsx setlocal shiftwidth=2 tabstop=2
 autocmd FileType dart setlocal shiftwidth=2 tabstop=2
+autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
 
 " try redrawing as fewer times as possible.
 :set lazyredraw 
@@ -272,7 +273,7 @@ Plugin 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 Plugin 'tpope/vim-unimpaired'
 
 " GitGutter
-Plugin 'airblade/vim-gitgutter'
+" Plugin 'airblade/vim-gitgutter'
 
 " Dart language support 
 Plugin 'dart-lang/dart-vim-plugin'

@@ -41,6 +41,9 @@ find /path/to/search -regex 'regex pattern (full path)'
 find /var -regex '.*/tmp/.*[0-9]*.file'
 
 find . -name "*storage-controller*" -type f -executable
+
+# Find and repalce in files
+find ./WHERE -type f -exec sed -i 's/FROM/TO/g' {} +
 ```
 
 ## Replacing stuff
@@ -50,6 +53,8 @@ grep mega_bytes_per_sec -r . -l | xargs sed -i 's/bandwidth_mega_bytes_per_sec_l
 
 # Find and replace
 find . -type f -name 'xa*' | xargs sed -i 's/asd/dsg/g'
+# Find and replace whout xargs
+find ./WHERE -type f -exec sed -i 's/FROM/TO/g' {} +
 ```
 
 
@@ -194,13 +199,17 @@ kubectl delete namespace pod-example
 kubectl run curler -it --rm --image=pstauffer/curl --restart=Never -- sh
 ```
 
-## Minicube
+## Minikube
 ```bash
-minicube ip
+minikube ip
+
+minikube delete
 
 # How to use local docker images with Minikube? (Another way is to use Telepresense --swap-deployment
 # Start minikube
 minikube start
+# start minikube with virtualbox
+minikube start --vm-driver virtualbox
 # Set docker env
 eval $(minikube docker-env)
 # Build image
@@ -241,6 +250,8 @@ telepresence --swap-deployment composition-fungible-interface --docker-run --rm 
 sudo yum install conntrack
 telepresence --swap-deployment composition-fungible-interface --expose 5001 --run python run_fungible_interface.py
 telepresence --swap-deployment composition-orchestration --expose 5002 --run python run_orchestration.py
+
+telepresence --swap-deployment tm-service-tm-collector-agent --expose 51234
 
 # local shell using Telepresence that can access that service, even though the process is local but the service is running inside Minikube:
 telepresence --run-shell
@@ -315,6 +326,27 @@ git tag -d 0.0.22
 
 # remove tag from remote
 git push origin :refs/tags/0.0.22
+
+# git generate ssh key ~/.ssh/id_rsa ~/.ssh/id_rsa.pub
+ssh-keygen
+# Start the agent, run the following
+eval `ssh-agent`
+# Add the key to the ssh-agent 
+ssh-add ~/.ssh/<private_key_file>
+# Add your ssh key to github, bitbucket etc.
+cat ~/.ssh/id_rsa.pub
+# or
+xclip -sel clip < ~/.ssh/id_rsa.pub
+# Check it
+ssh -T git@bitbucket.org
+ssh -T git@github.com
+
+# Make private go repo available global .gitconfig must look like this, so that 'go get' works:
+[url "ssh://git@private.repo.net"]
+    insteadOf = https://private.repo.net
+# e.g.
+[url "ssh://git@github.com/fungible-inc"]
+    insteadOf = https://github.com/fungible-inc
 ```
 
 ## Run command periodically
@@ -1003,6 +1035,86 @@ https://wiki.archlinux.org/index.php/Keyboard_backlight
 echo 0 | sudo tee /sys/class/leds/dell\:\:kbd_backlight/brightness
 # geniric way
 echo 1 | sudo tee /sys/class/leds/tpacpi::kbd_backlight/brightness
+
+## Terminal info file
+```
+tic - the terminfo entry-description compiler
+# terminfo files location:
+# /usr/share/terminfo
+# /usr/local/share/terminfo
+
+tic -s dvtm.info
+2 entries written to /home/dtkachenko/.terminfo
+cp /home/dtkachenko/.terminfo/d/dvtm /usr/share/terminfo/d/
+cp /home/dtkachenko/.terminfo/d/dvtm-256color /usr/share/terminfo/d/
+```
+
+## Count number of files in the git repo
+```
+git ls-files | xargs wc -l
+```
+
+## Suckless
+```
+abduco - terminal session manager
+dvtm - dynamic virtual terminal manager
+```
+
+## kafkacat on centos amazonlinux
+```
+sudo yum update -y
+sudo yum install git -y
+# make sure you have the necessary dev tools avail,
+# or run the ff command:
+sudo yum group install “Development Tools” -y
+git clone https://github.com/edenhill/kafkacat.git
+cd kafkacat/
+./bootstrap.sh
+./kafkacat -h
+```
+
+## kafka k8s cluster
+```
+# Get inside 
+kubectl -n default exec -it tm-service-tm-collector-agent-766f6d769f-km27n -- /bin/sh
+
+# get topics
+kubectl -n default exec testclient -- kafka-topics --zookeeper kafka-zookeeper:2181 --list
+
+# consumer
+kubectl -n default exec -ti testclient -- kafka-console-consumer --bootstrap-server kafka:9092 --topic TM_Default_Topic --from-beginning
+
+# write to the topic using the netcat
+netcat -w 1 -u 192.168.176.8 51234 < ../../test/data/funstop-wsub.bjson
+ncat -w 1 -u $(minicube ip) 31287 test/data/funstop-wsub.bjson
+# write to the topic using the testagent
+kubectl -n default exec -ti testclient -- kafka-console-producer --broker-list kafka-headless:9092 --topic TM_Default_Topic
+
+# useful docker images
+docker pull confluentinc/cp-kafkacat
+docker pull itsthenetwork/alpine-tcpdump
+
+# egarding your issue with running kafkacat locally yesterday (instead of using the testclient), 
+# I followed the advice here https://github.com/kubeless/kubeless/issues/966
+# to add my minikube ip to /etc/hosts and now I can produce and consume with kafkacat
+kafkacat -b 192.168.39.166:31090 -t TM_Default_Topic
+    % Auto-selecting Consumer mode (use -P or -C to override)
+    A test TMService message
+    % Reached end of topic TM_Default_Topic [0] at offset 1
+```
+
+## Alpine install whois
+```
+apk add --update util-linux
+```
+
+## Copy to xclipboard
+```
+$ sudo apt-get install xclip
+# Downloads and installs xclip. If you don't have `apt-get`, you might need to use another installer (like `yum`)
+
+$ xclip -sel clip < ~/.ssh/id_rsa.pub
+# Copies the contents of the id_rsa.pub file to your clipboard
 ```
 
 ## misk 
@@ -1024,9 +1136,11 @@ dependencies
 1036  sudo apt install libx11-dev
 1042  make clean install
 1044  sudo apt install libxft-dev
+```
 
 
-Fix wifi disconnect problem:
+## Fix wifi disconnect problem:
+```
 journalctl - diagnose 
 nmcli c - check connection state
 sudo modprobe -r brcmfmac
@@ -1041,29 +1155,3 @@ upower -i /org/freedesktop/UPower/devices/battery_BAT0
 ```
 
 
-## kafka
-```
-# get topics
-kubectl -n default exec testclient -- kafka-topics --zookeeper kafka-zookeeper:2181 --list
-
-# consumer
-kubectl -n default exec -ti testclient -- kafka-console-consumer --bootstrap-server kafka:9092 --topic TM_Default_Topic --from-beginning
-
-# write to the topic using the netcat
-netcat -w 1 -u 192.168.176.8 51234 < ../../test/data/funstop-wsub.bjson
-# write to the topic using the testagent
-kubectl -n default exec -ti testclient -- kafka-console-producer --broker-list kafka-headless:9092 --topic TM_Default_Topic
-
-# useful docker images
-docker pull confluentinc/cp-kafkacat
-docker pull itsthenetwork/alpine-tcpdump
-
-
-# egarding your issue with running kafkacat locally yesterday (instead of using the testclient), 
-# I followed the advice here https://github.com/kubeless/kubeless/issues/966
-# to add my minikube ip to /etc/hosts and now I can produce and consume with kafkacat
-kafkacat -b 192.168.39.166:31090 -t TM_Default_Topic
-    % Auto-selecting Consumer mode (use -P or -C to override)
-    A test TMService message
-    % Reached end of topic TM_Default_Topic [0] at offset 1
-```
