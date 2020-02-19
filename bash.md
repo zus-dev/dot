@@ -1039,3 +1039,31 @@ nmcli c up CCSAPT906
 ```
 upower -i /org/freedesktop/UPower/devices/battery_BAT0
 ```
+
+
+## kafka
+```
+# get topics
+kubectl -n default exec testclient -- kafka-topics --zookeeper kafka-zookeeper:2181 --list
+
+# consumer
+kubectl -n default exec -ti testclient -- kafka-console-consumer --bootstrap-server kafka:9092 --topic TM_Default_Topic --from-beginning
+
+# write to the topic using the netcat
+netcat -w 1 -u 192.168.176.8 51234 < ../../test/data/funstop-wsub.bjson
+# write to the topic using the testagent
+kubectl -n default exec -ti testclient -- kafka-console-producer --broker-list kafka-headless:9092 --topic TM_Default_Topic
+
+# useful docker images
+docker pull confluentinc/cp-kafkacat
+docker pull itsthenetwork/alpine-tcpdump
+
+
+# egarding your issue with running kafkacat locally yesterday (instead of using the testclient), 
+# I followed the advice here https://github.com/kubeless/kubeless/issues/966
+# to add my minikube ip to /etc/hosts and now I can produce and consume with kafkacat
+kafkacat -b 192.168.39.166:31090 -t TM_Default_Topic
+    % Auto-selecting Consumer mode (use -P or -C to override)
+    A test TMService message
+    % Reached end of topic TM_Default_Topic [0] at offset 1
+```
