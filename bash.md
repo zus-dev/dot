@@ -156,6 +156,17 @@ docker exec -it {container} /bin/bash
 
 ## Kubernetes
 ```bash
+kubectl cluster-info
+minikube ssh
+uname --all
+kubectl get nodes
+
+# How to deploy and expose service
+# echo - name of the deployment
+kubectl run echo --image=gcr.io/google_containers/echoserver:1.4 --port=8080
+kubectl expose deployment echo --type=NodePort
+kubectl get service echo --output='jsonpath="{.spec.ports[0].nodePort}"'
+
 # Getting a shell to a pod 
 kubectl exec -it <pod-name> -- /bin/bash
 # Getting a shell to a specific container inside the pod
@@ -985,6 +996,15 @@ echo 2 | sudo tee /sys/class/leds/dell\:\:kbd_backlight/brightness
 redshift
 ```
 
+## Keyboard backlight control 
+https://wiki.archlinux.org/index.php/Keyboard_backlight
+```
+# note dell part! (works for XPS 9550)
+echo 0 | sudo tee /sys/class/leds/dell\:\:kbd_backlight/brightness
+# geniric way
+echo 1 | sudo tee /sys/class/leds/tpacpi::kbd_backlight/brightness
+```
+
 ## misk 
 ```
 ps -ev
@@ -992,4 +1012,30 @@ mysql -h172.17.0.2  -pmy-secret-pw
 mysql -h172.17.0.2  -pmy-secret-pw ifdb < ifdb-archive.sql
 ```
 
+## suckless
+```
+abduco
+dvtm
 
+
+st 
+make clean install 
+dependencies
+1036  sudo apt install libx11-dev
+1042  make clean install
+1044  sudo apt install libxft-dev
+
+
+Fix wifi disconnect problem:
+journalctl - diagnose 
+nmcli c - check connection state
+sudo modprobe -r brcmfmac
+sudo modprobe  brcmfmac
+nmcli d connect wlp2s0
+nmcli c up CCSAPT906
+```
+
+## How to check battery status
+```
+upower -i /org/freedesktop/UPower/devices/battery_BAT0
+```
