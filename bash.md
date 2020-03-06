@@ -157,6 +157,12 @@ ctrl+p,ctrl+q
 
 # bash into running container 
 docker exec -it {container} /bin/bash
+
+
+# Install Docker Compose on CentOS
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
 ```
 
 ## Kubernetes
@@ -194,9 +200,11 @@ kubectl --namespace=pod-example get pods
 kubectl --namespace=pod-example delete pod examplepod
 kubectl delete namespace pod-example
 
-
 # run an image interactively
 kubectl run curler -it --rm --image=pstauffer/curl --restart=Never -- sh
+
+kubectl get pods --field-selector status.phase=Running
+kubectl delete pods --field-selector status.phase=Succeeded
 ```
 
 ## Minikube
@@ -509,6 +517,9 @@ fallocate -l 100G 100G.qcow2
 
 # show full process tree with PID, TGID
 pstree -h PID -p -g -s
+
+# show process tree for current process
+pstree -s $$
 
 # show processes or threads actually doing I/O 
 iotop -u
@@ -1084,11 +1095,12 @@ kubectl -n default exec testclient -- kafka-topics --zookeeper kafka-zookeeper:2
 # consumer
 kubectl -n default exec -ti testclient -- kafka-console-consumer --bootstrap-server kafka:9092 --topic TM_Default_Topic --from-beginning
 
-# write to the topic using the netcat
+# produce - write to the topic using the netcat
 netcat -w 1 -u 192.168.176.8 51234 < ../../test/data/funstop-wsub.bjson
 ncat -w 1 -u $(minicube ip) 31287 test/data/funstop-wsub.bjson
 # write to the topic using the testagent
 kubectl -n default exec -ti testclient -- kafka-console-producer --broker-list kafka-headless:9092 --topic TM_Default_Topic
+kafka-console-producer.sh --broker-list localhost:9092 --topic my_topic < my_file.txt
 
 # useful docker images
 docker pull confluentinc/cp-kafkacat
@@ -1155,3 +1167,62 @@ upower -i /org/freedesktop/UPower/devices/battery_BAT0
 ```
 
 
+## Get you the private IP address of your interfaces:
+```
+ifconfig -a
+ip addr (ip a)
+hostname -I | awk '{print $1}'
+ip route get 1.2.3.4 | awk '{print $7}'
+(Fedora) Wifi-Settings→ click the setting icon next to the Wifi name that you are connected to → Ipv4 and Ipv6 both can be seen
+nmcli -p device show
+```
+
+
+## View directory tree structure 
+```
+tree .
+ls -R 
+find . -print
+du -a .
+```
+
+
+## android 
+### EDL mode 
+adb reboot edl
+adb reboot bootloader
+sudo watch /home/dtkachenko/Android/Sdk/platform-tools/fastboot devices
+sudo /home/dtkachenko/Android/Sdk/platform-tools/fastboot flashing unlock
+
+
+
+## Helm 
+```bash
+helm fetch bitnami/kafka --version 7.2.6
+helm install --dry-run --debug fc  ./fungible-controller/ | less
+helm dependency list ./fungible-controller/
+helm dependency update ./fungible-controller/
+
+# select particular node for the pod. run the pod on a specific node
+helm install ag api-gateway/ --atomic --set nodeSelector.'kubernetes\.io/hostname'=fcc-cluster-1-w3
+
+# api-gateway kafka:
+kubectl logs svc/fc-sns-controller | grep -E "connected|TLS|topic"
+/workspace/FunAPIGateway/config
+/workspace/FunAPIGateway/config # ls
+apigateway.yaml
+vim restapi/configure_gateway.go 
+```
+
+
+## HA Solution
+```
+olutions which we are trying to explore
+Evaluating two HA solutions 
+https://portworx.com/
+https://storageos.com/
+Other potential solutions
+https://www.quobyte.com/containers
+https://kadalu.io/docs/k8s-storage/latest/introduction
+https://rook.io/
+```

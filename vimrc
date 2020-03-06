@@ -131,6 +131,7 @@ set nospell
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 
 " Highlight current line (horizontal line)
+" See hi CursorLine below
 set cursorline 
 
 " logs highlight
@@ -152,6 +153,7 @@ set cursorline
 " :h cterm-colors
 " list of types to highlight:
 " :hi
+" hi CursorLine cterm=NONE ctermbg=darkgray ctermfg=white guibg=darkgray guifg=white
 hi Search cterm=NONE ctermfg=black ctermbg=yellow
 hi String cterm=NONE ctermfg=brown
 " hi String cterm=NONE ctermfg=4
