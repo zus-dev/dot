@@ -1140,18 +1140,14 @@ mysql -h172.17.0.2  -pmy-secret-pw ifdb < ifdb-archive.sql
 ```
 abduco
 dvtm
-
-
 st 
-make clean install 
-dependencies
-1036  sudo apt install libx11-dev
-1042  make clean install
-1044  sudo apt install libxft-dev
+sudo apt install libx11-dev
+sudo apt install libxft-dev
+make clean install
 ```
 
-
 ## Fix wifi disconnect problem:
+NOTE: nmcli - part of the [NetworkManager](https://wiki.archlinux.org/index.php/NetworkManager) package
 ```
 journalctl - diagnose 
 nmcli c - check connection state
@@ -1225,4 +1221,11 @@ Other potential solutions
 https://www.quobyte.com/containers
 https://kadalu.io/docs/k8s-storage/latest/introduction
 https://rook.io/
+```
+
+## Network Manager
+https://wiki.archlinux.org/index.php/NetworkManager
+```
+nmcli
+nmtui
 ```
