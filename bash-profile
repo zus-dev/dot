@@ -30,3 +30,28 @@ fi
 # How do I change the color for directories with ls in the console?
 # https://askubuntu.com/questions/466198/how-do-i-change-the-color-for-directories-with-ls-in-the-console
 export LS_COLORS="$LS_COLORS:ow=1;34:tw=1;34:"
+
+# From .bashrc Wed 15 Apr 2020 04:13:46 PM EDT
+
+alias ls='ls --color=auto'
+PS1='[\u@\h \W]\$ '
+
+export PATH=~/bin/openvpn:$PATH
+export PATH=~/bin:$PATH
+export PATH=~/dot/bin:$PATH
+
+export EDITOR=vim
+
+# minikube completion bash > ~/.minikube-completion
+source ~/.minikube-completion
+# kubectl completion bash > ~/.kubectl-completion
+source ~/.kubectl-completion
+# helm completion bash > ~/.helm-completion
+source ~/.helm-completion
+source /usr/share/fzf/key-bindings.bash
+source /usr/share/fzf/completion.bash
+
+
+# pyenv
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"

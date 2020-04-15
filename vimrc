@@ -1,6 +1,9 @@
 " TO RELOAD .vimrc
 " :so % 
 
+" check for loaded scripts
+" :scriptnames
+
 " :help args
 " :help argadd
 " :help argdelete
@@ -22,19 +25,31 @@ autocmd FileType html setlocal shiftwidth=2 tabstop=2
 autocmd FileType javascript.jsx setlocal shiftwidth=2 tabstop=2
 autocmd FileType dart setlocal shiftwidth=2 tabstop=2
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
+autocmd FileType go setlocal noexpandtab
+
+" Uncomment the following to have Vim jump to the last position when
+" reopening a file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
 
 " try redrawing as fewer times as possible.
-:set lazyredraw 
-:set ttyfast
+set lazyredraw 
+set ttyfast
 
 " Long lines make VIM slow
-:set synmaxcol=255
+set synmaxcol=255
 
 " folding
 " anything other than 'syntax'
 set foldmethod=indent
 " Fix vim to properly indent folds containing Python comment lines
-:set foldignore=
+set foldignore=
+
+" Show (partial) command in the last line of the screen.  Set this
+" option off if your terminal is slow.
+" SEE Below second one!
+set showcmd
 
 " list of options for Insert mode completion
 " Use the popup menu also when there is only one match.
@@ -49,8 +64,7 @@ set completeopt=menuone,noinsert,noselect
 " :he 21.3
 " :he E20
 " :mksession
-:set viminfo='1000,f1
-
+set viminfo='1000,f1
 
 " make backspace work like most other programs
 " :help 'backspace'
@@ -78,7 +92,7 @@ set wrap!
 
 " highlight all search pattern matches
 " :nohlsearch
-:set hlsearch
+set hlsearch
 
 " Show file options above the command line
 " :h 'wildmenu'
@@ -92,7 +106,6 @@ set path+=**
 set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»
 " turn on:
 " set list 
-
 
 " disable auto indent on paste 
 " By configuring set paste, you're effectively disabling all mappings and abbreviations.
@@ -125,7 +138,6 @@ syn match AcronymNoSpell '\<\(\u\|\d\)\{3,}s\?\>' contains=@NoSpell
 " turn off by default
 set nospell
 
-
 " syntax highlight for markdown, set to .markdown by default.
 " set syntax=markdown
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
@@ -154,6 +166,7 @@ set cursorline
 " list of types to highlight:
 " :hi
 " hi CursorLine cterm=NONE ctermbg=darkgray ctermfg=white guibg=darkgray guifg=white
+hi CursorLine cterm=NONE ctermbg=0 guibg=lightgray
 hi Search cterm=NONE ctermfg=black ctermbg=yellow
 hi String cterm=NONE ctermfg=brown
 " hi String cterm=NONE ctermfg=4
@@ -173,7 +186,7 @@ hi Function cterm=NONE ctermfg=darkgreen
 hi Constant cterm=NONE ctermfg=blue
 hi SpellBad cterm=NONE ctermfg=black
 hi Folded cterm=NONE ctermfg=gray ctermbg=none
-hi ColorColumn ctermbg=8
+" hi ColorColumn ctermbg=8
 hi ColorColumn ctermbg=6
 hi Comment cterm=NONE ctermfg=gray
 hi Visual cterm=NONE ctermfg=black ctermbg=white
@@ -242,13 +255,13 @@ Plugin 'junegunn/fzf.vim'
 " Plugin 'jiangmiao/auto-pairs'
 
 " The enhanced C++ syntax highlighting.
-Plugin 'octol/vim-cpp-enhanced-highlight'
+" Plugin 'octol/vim-cpp-enhanced-highlight'
 
 " tagbar 
-Plugin 'majutsushi/tagbar'
+" Plugin 'majutsushi/tagbar'
 
 " Switch between different file projections (alternatives e.g. *.h => *.cpp)
-Plugin 'tpope/vim-projectionist'
+" Plugin 'tpope/vim-projectionist'
 
 " press "-" to open the file location for the current buffer (NERDTree will do
 " the same)
@@ -295,6 +308,9 @@ Plugin 'natebosch/vim-lsc'
 " Viewer & Finder for LSP symbols and tags 
 " Plugin 'liuchengxu/vista.vim'
 
+" Fast and featureful file manager in vim/neovim powered by nnn
+" Plugin 'mcchrish/nnn.vim'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -310,6 +326,9 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 " END: Vundle
+
+" Vundle overrides this so this needs to be restored afterwards
+set showcmd
 
 " " Vista config
 " " See :help vista-options for more information.

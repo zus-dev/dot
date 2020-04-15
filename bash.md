@@ -286,6 +286,9 @@ git diff COMMIT~ COMMIT
 # get list of changed files
 git diff-tree --no-commit-id --name-only -r <commit-hash>
 
+# update commit message to last commit 
+git commit --amend
+
 git commit --amend --no-edit
 
 # set or unset upstream

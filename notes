@@ -1,0 +1,544 @@
+# Set large font 
+setfont latarcyrheb-sun32
+ls /usr/share/kbd/consolefonts/
+
+# check battery status 
+# requires:
+# upower -e 
+# upower -i /org/freedesktop/UPower/devices/battery_BAT0
+cat /sys/class/power_supply/BAT0/capacity
+
+# desktop notifications
+# https://wiki.archlinux.org/index.php/Desktop_notifications
+battery_level=`acpi -b | grep -P -o '[0-9]+(?=%)'`
+if [ $battery_level -le 10 ]
+then
+    notify-send "Battery low" "Battery level is ${battery_level}%!"
+fi
+
+# swapfile 
+cat /proc/swap
+swapon -s
+
+# create swapfile 
+fallocate -l 512M /swapfile
+# or
+dd if=/dev/zero of=/swapfile bs=1M count=512 status=progress
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+vim /etc/fstab
+---
+/swapfile none swap defaults 0 0
+---
+
+# suspend 
+# /etc/powersave/sleep
+UNLOAD_MODULES_BEFORE_SUSPEND2RAM=""
+SUSPEND2RAM_RESTART_SERVICES=""
+SUSPEND2RAM_SWITCH_VT="yes"
+
+# systemd sleep config
+cat /etc/systemd/sleep.conf
+
+# timezone
+# file: /etc/localtime -> /usr/share/zoneinfo/Etc/GMT-4
+timedatectl set-timezone Etc/GMT-4
+
+# XPS intel video driver
+pacman -S xf86-video-intel
+
+# display brightness 
+cat /sys/class/backlight/intel_backlight/max_brightness
+echo 348 > /sys/class/backlight/intel_backlight/brightness
+pacman -S xorg-xbacklight
+xbacklight -inc 5
+
+# kernel modules (drivers)
+cat /proc/modules
+lsmod
+modprobe
+modinfo
+rmmod
+
+# advanced power management
+# https://linrunner.de/en/tlp/docs/tlp-linux-advanced-power-management.html
+pacman -S tlp tlp-rdw
+# check tlp mode and power source
+tlp-stat -s # system data 
+tlp-stat -b # battery info
+# Apply AC settings and change to manual mode.
+# Changes to the power source will be ignored until the next reboot
+# or tlp start is issued to resume automatic mode.
+tlp ac
+tlp bat
+# check top battery consumers
+pacman -S powertop
+
+# sound system 
+# ALSA + PulseAudio (Firefox)
+pacman -S alsa-utils
+alsamixer
+amixer
+pacman -S pulseaudio
+# gtk pulseaudio ui
+pavucontrol
+
+# OpenSSH includes ssh client
+pacman -S openssh
+ssh-keygen
+
+# openvpn
+pacman -S openvpn
+# login: 
+# https://vpn.cloudistics.com
+# download user-locked profile "Connection profiles can be downloaded for:"
+openvpn --config ~/Downloads/client.ovpn
+
+# keyboard layout (x language settings)
+# all toggle can be found here:
+man xkeyboard-config
+setxkbmap -query
+setxkbmap -layout us,ru -option 'grp:lctrl_lwin_toggle'
+
+# torrent
+pacman -S transmission-cli
+# config transmission
+vim ~/.config/transmission-daemon/settings.json
+# start transmission
+transmission-daemon
+# stop transmission
+transmission-remote --exit
+
+# Get file system information
+lsblk -f
+fdisk -l /dev/sdN
+
+# Copy with progress
+# -a keep permissions
+# -h human readable
+# -r recurcively (folder)
+# show total progres
+rsync --info=progress2 path/source path/dest
+# show per file progress
+rsync -ah --progress source destination
+cp -vr path/to path/to/copy
+
+# Remove package with dependencies
+pacman -Rs <package>
+
+# Update synchronizes the repository databases and updates 
+# the system's packages, excluding "local" packages that 
+# are not in the configured repositories
+pacman -Syu
+
+# Fonts
+ls /usr/share/fonts
+pacman -S ttf-liberation
+fc-query /usr/share/fonts/liberation/LiberationMono-Regular.ttf | grep -E "family|fullname"
+    family: "Liberation Mono"(s)
+    fullname: "Liberation Mono"(s)
+fc-match "Liberation Mono"
+# color pixels fonts
+pacman -S ttf-joypixels
+# st can crash after that change. In that case libxft needs to be patched:
+# https://aur.archlinux.org/packages/libxft-bgra/
+# Unicode icons in st
+# :: libxft-bgra and libxft are in conflict. Remove libxft? [y/N] y
+# Packages (2) libxft-2.3.3-1 [removal]  libxft-bgra-2.3.3-1
+
+# network manager
+nmtui # -> wifi: Activate a connection
+nmcli device wifi list
+nmcli radio wifi off|on
+nmcli device wifi connect <SSID> username <username> password <password>
+nmcli device wifi connect <SSID> -ask
+nmcli device wifi connect <SSID> password <password> hidden yes
+nmcli device disconnect ifname eth0
+nmcli connection show
+nmcli connection up uuid <UUID>
+
+# monitor/display control
+xrandr
+xrandr --listmonitors
+
+# IO test
+# fio test
+# downsampling
+# 3 Giga-bits - data stream
+# Mb/sec * 256 = IO
+
+# UDEV, cgroups
+
+# Turnoff GPU
+pacman -S acpi_call
+# Trying \_SB.PCI0.PEG0.PEGP._OFF: works!
+cat /etc/modules-load.d/acpi_call.conf
+---
+# Load 'acpi_call.ko' at boot.
+acpi_call
+---
+# Turn off NVIDIA GPU on boot
+cat /etc/tmpfiles.d/acpi_call.conf
+---
+w /proc/acpi/call - - - - \\_SB.PCI0.PEG0.PEGP._OFF
+---
+
+# Top power consumption
+ 6.28 W    100.0%                      Device         Radio device: btusb
+ 1.53 W      5.0%                      Device         Display backlight
+ 1.51 W    100.0%                      Device         USB device: Flash Drive FIT (Samsung)
+
+# Blacklisted drivers/modules
+cat /etc/modprobe.d/blacklist.conf
+---
+# Do not load the 'nouveau' module on boot.
+blacklist nouveau
+# Do not load the 'nvidia' module on boot.
+blacklist nvidia
+# Block bluetooth
+# https://wiki.archlinux.org/index.php/Power_management#Bluetooth
+blacklist btusb
+blacklist bluetooth
+---
+
+# screenshot 
+pacman -S imagemagick
+# make a screenshot of the screen region
+import ss.png
+# capture whole display
+import -window root ss.png
+
+# kernel config
+zcat /proc/config.gz
+
+# list files installed by package
+pacman -Ql <package> # local
+pacman -Sl <package> # available remote
+pacman -Fl <package> # available remote
+
+# bash completion
+pacman -S bash-completion
+
+# Set and unset shell options
+shopt -u
+
+# print or control the kernel ring buffer
+dmesg
+dmesg --clear
+
+# journalctl
+journalctl -b # boot messages
+journalctl -b -1 # previous boot
+journalctl --list-boots
+journalctl --since "1 hour ago"
+journalctl --since "2015-06-26 23:15:00" --until "2015-06-26 23:20:00"
+journalctl -u nginx.service # by unit
+journalctl -u nginx.service -u mysql.service # by multiple units
+journalctl -f # follow
+journalctl -b -1  -p "emerg".."crit" # by priority
+
+# github personal access token
+vim ~/.netrc
+
+# firefox|xorg freezing
+vim /etc/X11/xorg.conf.d/20-intel.conf
+---
+Section "Device"
+  Identifier "Intel Graphics"
+  Driver "intel"
+
+  Option "TearFree" "true"
+  Option "DRI" "2"
+EndSection
+---
+
+# switch back and forth between two directories
+cd -
+popd
+pushd
+dirs
+
+# i3
+pacman -S i3wm i3status
+
+# Docker
+pacman -S docker
+systemctl enable docker.service
+systemctl start docker.service
+usermod -a -G docker $(whoami)
+
+# KVM
+# virtualization
+pacman -S qemu
+# front-ends
+pacman -S libvirt virt-manager 
+# networking
+pacman -S vde2 ebtables dnsmasq bridge-utils openbsd-netcat
+# setup
+usermod -a -G libvirt $(whoami)
+vim /etc/libvirt/libvirtd.conf
+---
+# This is restricted to 'root' by default.
+unix_sock_group = "libvirt"
+# If not using PolicyKit and setting group ownership for access
+# control, then you may want to relax this too.
+unix_sock_rw_perms = "0770"
+---
+sudo systemctl enable libvirtd.service
+sudo systemctl start libvirtd.service
+# GUI
+# File -> Add Connection
+virt-manager
+
+# Kubernetes
+# https://kubernetes.io/docs/tasks/tools/install-kubectl/
+# Download the latest release
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+kubectl version --client
+
+# Minikube
+# https://kubernetes.io/docs/tasks/tools/install-minikube/
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+chmod +x minikube
+sudo install minikube /usr/local/bin/
+# setup completion (requires bash-completion)
+minikube completion bash > ~/.minikube-completion
+source ~/.minikube-completion
+# show avaiable setup options
+minikube start -h
+# Setup kvm 10GB 2CPU
+# https://kubernetes.io/docs/setup/learning-environment/minikube/#specifying-the-vm-driver
+minikube start --vm-driver=kvm2 --cpus=2 --memory=10g
+# or: Setup virtual box 4GB 2CPU 
+minikube config set memory 10g
+minikube config set cpus 2
+minikube config set vm-driver virtualbox
+minikube start
+
+# Helm
+curl -LO https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+tar -zxvf helm-v3.0.0-linux-amd64.tar.gz
+mv linux-amd64/helm /usr/local/bin/helm
+helm version
+
+# packages
+pacman -S xclip
+pacman -S gvim # instead of vim
+# list all orphans/unused 
+pacman -Qdt
+# delete all ophans/unused
+pacman -Rsn $(pacman -Qdtq)
+
+# AUR packages
+git clone https://aur.archlinux.org/package_name.git
+cd package_name
+less PKGBUILD
+# -s/--syncdeps	automatically resolves and installs any dependencies
+# 		with pacman before building
+# -i/--install	installs the package if it is built successfully.
+# 		Alternatively the built package can be installed
+# 		with pacman -U package_name.pkg.tar.xz.
+makepkg -si
+# FAILED (unknown public key CFDF148828C642A7)
+gpg --recv-keys CFDF148828C642A7
+
+# netwrok manager vpn
+# NOTE: netwrokmanager-openvpn does not work with vpn.cloudistics.com
+pacman -S networkmanager-openvpn
+# add NM commands to the dmenu:
+pacman -S networkmanager-dmenu-git
+nmcli connection import type openvpn file <file.ovpn>
+# nmtui required this lib:
+pacman -F libnma.so.0
+pacman -S libnma
+# connections:
+ls /etc/NetworkManager/system-connections/
+# keys:
+ls /root/.cert/nm-openvpn/
+# connect:
+nmcli connect show
+nmcli connect up <connection name>
+
+# VPN DNS works with native openvpn client and settings:
+cp /usr/share/openvpn/contrib/pull-resolv-conf/client.up  /etc/openvpn/client.up
+cp /usr/share/openvpn/contrib/pull-resolv-conf/client.down  /etc/openvpn/client.down
+chmod a+x /etc/openvpn/client.up
+chmod a+x /etc/openvpn/client.down
+# client.ovpn from https://vpn.cloudistics.com
+openvpn --config client.ovpn --script-security 2 --up /etc/openvpn/client.up --down /etc/openvpn/client.down
+
+# FZF 
+pacman -S fzf
+source /usr/share/fzf/key-bindings.bash
+source /usr/share/fzf/completion.bash
+
+# headphones aren't working. 
+# The integrated speakers still worked, but anything I plugged into the jack wouldn't work properly.
+# alsa-utils
+alsactl restore
+
+# list hardware info
+lspci
+lshw
+
+# sound troublesooting
+hwinfo --sound
+sudo modprobe snd_hda_intel
+#
+dmesg
+[    7.375238] snd_hda_intel 0000:00:1f.3: CORB reset timeout#1, CORBRP = 0
+[    7.376821] snd_hda_intel 0000:00:1f.3: no codecs found!
+[    8.761545] nvidia: module license 'NVIDIA' taints kernel.
+[    8.761547] Disabling lock debugging due to kernel taint
+[    9.027283] mc: Linux media interface: v0.10
+# list soundcards (alsa)
+cat /proc/asound/cards
+# tdoublesoot alsa
+dmesg | grep -E 'snd|hda|ALSA'
+lspci -k
+# conifig while working:
+lspci
+03:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS525A PCI Express Card Reader (rev 01)
+# whitenoice speaker test
+speaker-test
+# alsa configuration restore
+alsactl nrestore
+alsactl init
+    Found hardware: "HDA-Intel" "Realtek ALC3266" "HDA:10ec0298,102806e4,00100103 HDA:80862809,80860101,00100000" "0x1028" "0x06e4"
+    Hardware is initialized using a generic method
+alsactl -f /var/lib/alsa/asound.state store
+#
+# ALSA: Sound doesn't switch to headphones when plugged into headphone jack
+# - You may need to go into alsamixer and enable auto-mute. I seem to recall having this problem on a previous build.
+# - Try reconfiguring the plugs with hdajackretask that's in the alsa-tools package.
+#   Use the command as root and reboot afterwards
+#
+# Pulseaudio profile: Analog Stereo Duplex
+#
+# Pulseaudio config 
+# /etc/pulse/default.pa
+# ~/.config/pulse/default.pa
+# /usr/share/pulseaudio/alsa-mixer/paths/analog-output-lineout.conf
+# Restart pulseaudio
+pulseaudio --kill
+pulseaudio --start
+# Tue 07 Apr 2020 06:53:22 PM EDT
+# uninstalling zoom, pulseaudio (everything) helped, alsa-utils?
+# DID NOT uninstall: alsa-lib 
+
+# grub 
+grub-install --target=i386-pc /dev/<device>
+vim /etc/default/grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# Fungible
+v94
+501 certificates to secure channel
+PLM? authentication
+
+# kubectl edit
+kubectl edit configmap <name>
+
+# Kind 
+# kubernetes k3s?
+
+# show all mounted devices
+df
+lsblk -f
+lsblk -fm
+
+# mount android device MTP mount USB
+lsusb
+# Packages (3) libmad-0.15.1b-8  libmtp-1.1.17-1  mtpfs-1.1-3
+# mtpfs doesn't work
+mtp-detect
+# optionaly uncomment user_allow_other
+vim /etc/fuse.conf
+# jmtpfs
+# https://aur.archlinux.org/packages/jmtpfs/
+jmtpfs ~/mnt
+
+# mpv show vide info
+# i - show status (resolution, codec etc)
+# I - toggle status
+
+# run command for certain time
+# kill after timeout
+timeout 5s <command>
+timeout 5s sleep 10s
+
+
+# unbound immediate PersistentVolumeClaims 
+# accessModes need to be "ReadWriteMany"
+# remove storageClassName
+
+
+# Examine coredumps 
+coredumpctl list
+coredumpctl info match
+coredumpctl gdb match
+# coredump cleanup:
+ls /var/lib/systemd/coredump/
+systemd-tmpfiles --clean
+journalctl --vacuum-time=1d
+
+# downgrade one package
+# Letting pacman fetch it will automatically download 
+# the package's detached .sig file and verify it according to /etc/pacman.conf settings. 
+pacman -U https://archive.archlinux.org/packages/ ... packagename.pkg.tar.xz
+
+# mpv vido playback core crash with gpu
+# journalctl shows:
+# mpv segfault error 6 in iris_dri.so
+# solution 1
+mpv --vo=x11 video-file.mp4
+# solution 2: downgrade mesa
+pacman -U https://archive.archlinux.org/packages/m/mesa/mesa-19.3.3-1-x86_64.pkg.tar.zst
+# seems like related to the DRI setting /etc/X11/xorg.conf.d/20-intel.conf
+# useful links:
+# https://bugzilla.mozilla.org/show_bug.cgi?id=1599329
+# https://bbs.archlinux.org/viewtopic.php?id=252888/
+# https://wiki.archlinux.org/index.php/downgrading_packages
+
+# screen capture
+# Make sure pavucontrol:
+# record from - Monitor of Build-in Audio Analog Stereo
+# https://askubuntu.com/questions/682144/capturing-only-desktop-audio-with-ffmpeg
+# https://wiki.archlinux.org/index.php/FFmpeg
+ffmpeg -f x11grab -video_size 1920x1080 -framerate 25 -i $DISPLAY -f pulse -i default -c:v libx264 -preset ultrafast -c:a aac screen.mp4
+
+# rescan usb devices
+udevadm trigger
+
+# sync clock with network
+pacman -S ntp
+# register ntp as a daemon
+systemctl enable ntpd
+timedatectl set-ntp 1
+# Then check the status of the software clock 
+# with this command, “NTP enabled” should print “yes”.
+timedatectl status
+#       Local time: Wed 2013-07-10 15:39:56 JST
+#   Universal time: Wed 2013-07-10 06:39:56 UTC
+#         Timezone: Asia/Tokyo (JST, +0900)
+#      NTP enabled: yes
+# NTP synchronized: yes
+#  RTC in local TZ: no
+#       DST active: n/a
+#
+# Update the system clock if necessary after correct sync.
+hwclock --systohc
+# Finally start the daemon if you do not want to reboot the server.
+systemctl start ntpd
+# timezone
+# Create a synbolic link from 
+# /etc/localtime to /usr/share/zoneinfo/$ZONE/$SUBZONE. 
+# Replace $ZONE and $SUBZONE to your time zone. For example:
+ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
+
+# pip list fails with error
+# ImportError: cannot import name 'requests' from 'pip._vendor' 
+curl https://bootstrap.pypa.io/get-pip.py | sudo python3
