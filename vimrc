@@ -291,10 +291,10 @@ Plugin 'tpope/vim-unimpaired'
 " Plugin 'airblade/vim-gitgutter'
 
 " Dart language support 
-Plugin 'dart-lang/dart-vim-plugin'
+" Plugin 'dart-lang/dart-vim-plugin'
 
 " LSC Language Server Protocol (LSP) Client (e.g used for Dart)
-Plugin 'natebosch/vim-lsc'
+" Plugin 'natebosch/vim-lsc'
 
 " Dart configuration for the LSP (fails with 'Invalid file path')
 " Plugin 'natebosch/vim-lsc-dart'
