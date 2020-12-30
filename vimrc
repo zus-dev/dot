@@ -282,7 +282,7 @@ Plugin 'scrooloose/nerdtree'
 " Plugin 'jlanzarotta/bufexplorer'
 
 " Python IDE
-Plugin 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+" Plugin 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 
 " Complementary pairs of mappings
 Plugin 'tpope/vim-unimpaired'

@@ -17,5 +17,5 @@ if [ -d "$VUNDLE_DIR" ]; then
 else
     git clone https://github.com/VundleVim/Vundle.vim.git $VUNDLE_DIR
     vim +PluginInstall +qall
-    ~/.vim/bundle/YouCompleteMe/install.py --ts-completer
+    # ~/.vim/bundle/YouCompleteMe/install.py --ts-completer
 fi
