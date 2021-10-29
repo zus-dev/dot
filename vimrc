@@ -299,6 +299,18 @@ Plugin 'tpope/vim-unimpaired'
 " Dart configuration for the LSP (fails with 'Invalid file path')
 " Plugin 'natebosch/vim-lsc-dart'
 
+" vim-go golang language support
+" You will also need to install all the necessary binaries. vim-go makes it
+" easy to install all of them by providing a command, :GoInstallBinaries,
+" which will go get all the required binaries.
+"
+" Check out the Install section in the documentation for more detailed
+" instructions (:help go-install).
+"
+" The full documentation can be found at doc/vim-go.txt. You can display it
+" from within Vim with :help vim-go.
+Plugin 'fatih/vim-go'
+
 " ALE Check syntax in Vim asynchronously and fix files, with LSP support
 " This is alternative to vim-lsc
 " You may also consider combining package:dart_language_server with a Language
@@ -329,6 +341,19 @@ filetype plugin indent on    " required
 
 " Vundle overrides this so this needs to be restored afterwards
 set showcmd
+
+" vim-go config
+" auto close folds issue:
+" https://github.com/fatih/vim-go/issues/502
+"
+" One work-around to avoid this issue is to disable GoFmt: let
+" g:go_fmt_autosave = 0
+" You can then run GoFmt manually at specific times via :GoFmt in vim (but you
+" still loose all folds at this point).
+" let g:go_fmt_autosave = 0
+"
+" don't auto close folds on write:
+let g:go_fmt_experimental = 1
 
 " " Vista config
 " " See :help vista-options for more information.
