@@ -38,7 +38,7 @@ if has("autocmd")
 endif
 
 " try redrawing as fewer times as possible.
-set lazyredraw 
+set lazyredraw
 set ttyfast
 
 " Long lines make VIM slow
@@ -108,7 +108,7 @@ set incsearch
 " Do not wrap around search
 " when "search next" reaches end of file, it wraps around to the beginning,
 " and when "search previous" reaches the beginning, it wraps around to the end.
-set nowrapscan        
+set nowrapscan
 
 " Case sensitivity
 " When 'ignorecase' and 'smartcase' are both on, if a pattern contains an
@@ -353,6 +353,13 @@ Plugin 'fatih/vim-go'
 " Fast and featureful file manager in vim/neovim powered by nnn
 " Plugin 'mcchrish/nnn.vim'
 
+" This plugin automatically adjusts 'shiftwidth' and 'expandtab' heuristically
+" based on the current file, or, in the case the current file is new, blank,
+" or otherwise insufficient, by looking at other files of the same type in the
+" current and parent directories. In lieu of adjusting 'softtabstop',
+" 'smarttab' is enabled.
+Plugin 'tpope/vim-sleuth'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -509,8 +516,13 @@ command! -bang -nargs=* Ag
 autocmd InsertLeave * set nopaste
 
 function! ToggleW()
-    set list! spell! wrap!
-    call ToggleCC()
+  set list! spell! wrap!
+  call ToggleCC()
+endfunction
+
+" Remove Trailing Whitespaces
+function! StripTrailingWhitespaces()
+  %s/\s\+$//e
 endfunction
 
 let mapleader=' '
