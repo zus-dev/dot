@@ -94,9 +94,30 @@ set wrap!
 " show filename in the status line
 " set statusline+=%F
 
+" BEGIN: Searching
+
 " highlight all search pattern matches
 " :nohlsearch
 set hlsearch
+
+" Show the next match while entering a search
+" Ctrl-L (:help c_CTRL-L) to insert the next character from the match or
+" Ctrl-R Ctrl-W (:help c_CTRL-R_CTRL-F) to complete the current matching word.
+set incsearch
+
+" Do not wrap around search
+" when "search next" reaches end of file, it wraps around to the beginning,
+" and when "search previous" reaches the beginning, it wraps around to the end.
+set nowrapscan        
+
+" Case sensitivity
+" When 'ignorecase' and 'smartcase' are both on, if a pattern contains an
+" uppercase letter, it is case sensitive, otherwise, it is not. For example,
+" /The would find only "The", while /the would find "the" or "The" etc.
+set ignorecase
+set smartcase
+
+" END: Searching
 
 " Show file options above the command line
 " :h 'wildmenu'
