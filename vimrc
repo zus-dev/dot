@@ -459,7 +459,7 @@ fun! ToggleCC()
   endif
 endfun
 
-function PasteFromClipboard()
+function! PasteFromClipboard()
     set paste
     startinsert
 endfunction
@@ -508,7 +508,7 @@ command! -bang -nargs=* Ag
 " Disable nopaste after leave insert mode
 autocmd InsertLeave * set nopaste
 
-function ToggleW()
+function! ToggleW()
     set list! spell! wrap!
     call ToggleCC()
 endfunction

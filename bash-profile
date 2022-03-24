@@ -42,16 +42,24 @@ export PATH=~/dot/bin:$PATH
 
 export EDITOR=vim
 
+add_source() {
+    local SOURCE_FILE=$1
+    [ -f "$SOURCE_FILE" ] && source "$SOURCE_FILE"
+}
+
 # minikube completion bash > ~/.minikube-completion
-source ~/.minikube-completion
+add_source ~/.minikube-completion
 # kubectl completion bash > ~/.kubectl-completion
-source ~/.kubectl-completion
+add_source ~/.kubectl-completion
 # helm completion bash > ~/.helm-completion
-source ~/.helm-completion
-source /usr/share/fzf/key-bindings.bash
-source /usr/share/fzf/completion.bash
+add_source ~/.helm-completion
+add_source /usr/share/fzf/key-bindings.bash
+add_source /usr/share/fzf/completion.bash
 
 
 # pyenv
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
+PYENV_PATH="$HOME/.pyenv/bin"
+if [ -d "$PYENV_PATH" ] ; then
+    export PATH="$PYENV_PATH:$PATH"
+    eval "$(pyenv init -)"
+fi
