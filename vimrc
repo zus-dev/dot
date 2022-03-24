@@ -188,7 +188,7 @@ set cursorline
 ":set wrap!
 ":set nowrap
 
-" COLOR SCHEME
+" BEGIN: Color Scheme
 " list of colors:
 " :h cterm-colors
 " list of types to highlight:
@@ -202,10 +202,10 @@ hi Keyword cterm=NONE ctermfg=blue
 hi Statement cterm=NONE ctermfg=blue
 hi Type cterm=NONE ctermfg=blue
 " hi DiffAdd cterm=NONE ctermfg=black ctermbg=LightBlue
-hi DiffAdd cterm=NONE ctermfg=black ctermbg=green
-hi DiffDelete cterm=NONE ctermfg=black ctermbg=red
-hi DiffChange cterm=NONE ctermfg=black
-hi DiffText cterm=NONE ctermfg=black
+hi DiffAdd cterm=NONE ctermfg=white ctermbg=green
+hi DiffDelete cterm=NONE ctermfg=white ctermbg=red
+hi DiffChange cterm=NONE ctermfg=white ctermbg=LightMagenta
+hi DiffText cterm=NONE ctermfg=white
 " hi Function cterm=NONE ctermfg=blue
 " hi Function cterm=NONE ctermfg=5
 " hi Function cterm=NONE ctermfg=white
@@ -220,6 +220,8 @@ hi Comment cterm=NONE ctermfg=gray
 hi Visual cterm=NONE ctermfg=black ctermbg=white
 " LSClient uses this for Linter
 hi SpellCap cterm=NONE ctermfg=white ctermbg=brown
+
+" END: Color Scheme
 
 " completion using a syntax file
 " enable omni completion using a syntax file:
