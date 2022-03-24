@@ -1,5 +1,5 @@
 " TO RELOAD .vimrc
-" :so % 
+" :so %
 
 " check for loaded scripts
 " :scriptnames
@@ -19,6 +19,10 @@ filetype plugin indent on
 set tabstop=4
 set shiftwidth=4
 set expandtab
+
+" Remove Trailing Whitespace on Save
+" autocmd BufWritePre * :%s/\s\+$//e
+
 " To get the filetype:
 " :set filetype?
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
@@ -56,10 +60,10 @@ set showcmd
 " preview - opens a preview windows Ctrl-w z to close the preview window
 set completeopt=menuone,noinsert,noselect
 
-" Show vertical line 
+" Show vertical line
 " set colorcolumn=120
 
-" save marks between session (uppercase or numberic) 
+" save marks between session (uppercase or numberic)
 " more info
 " :he 21.3
 " :he E20
@@ -70,11 +74,11 @@ set viminfo='1000,f1
 " :help 'backspace'
 set backspace=indent,eol,start
 
-" syntax highlighting 
+" syntax highlighting
 syntax on
 
-" show line numbers 
-" to turn off: 
+" show line numbers
+" to turn off:
 " set nonumber
 " set number!
 " set relativenumber
@@ -105,11 +109,11 @@ set path+=**
 " Show invisible characters
 set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»
 " turn on:
-" set list 
+" set list
 
-" disable auto indent on paste 
+" disable auto indent on paste
 " By configuring set paste, you're effectively disabling all mappings and abbreviations.
-" You only need that set when you actually paste text in terminal Vim! It's best to bind this to a key. 
+" You only need that set when you actually paste text in terminal Vim! It's best to bind this to a key.
 " set paste
 
 " set auto indentation
@@ -123,7 +127,7 @@ set smartindent
 "           set spellfile=~/Dropbox/Tool/Vim_Spell_add/en.utf-8.add
 set spell spelllang=en_us
 set spellsuggest=fast,20
-" NOTE: Below solution is only for text files, for other types it's a bit more tricky 
+" NOTE: Below solution is only for text files, for other types it's a bit more tricky
 " Don't mark URL-like things as spelling errors
 " defining a new syntax highlighting group called UrlNoSpell (could be called
 " whatever you want), and when text matches the pattern, we mark it with the
@@ -141,10 +145,13 @@ set nospell
 " syntax highlight for markdown, set to .markdown by default.
 " set syntax=markdown
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
+" Highlight syntax inside Markdown
+let g:markdown_fenced_languages = ['html', 'python', 'vim', 'c']
+
 
 " Highlight current line (horizontal line)
 " See hi CursorLine below
-set cursorline 
+set cursorline
 
 " logs highlight
 " autocmd BufNewFile,BufReadPost *messages* :set filetype=messages
@@ -156,7 +163,7 @@ set cursorline
 " set pastetoggle=<F3>
 
 
-" word wrapping 
+" word wrapping
 ":set wrap!
 ":set nowrap
 
@@ -237,7 +244,7 @@ Plugin 'tpope/vim-fugitive'
 " YouCompleteMe
 " Plugin 'Valloric/YouCompleteMe'
 
-" Cheat sheet 
+" Cheat sheet
 "Plugin 'dbeniamine/cheat.sh-vim'
 
 " FZF
@@ -257,7 +264,7 @@ Plugin 'junegunn/fzf.vim'
 " The enhanced C++ syntax highlighting.
 " Plugin 'octol/vim-cpp-enhanced-highlight'
 
-" tagbar 
+" tagbar
 Plugin 'majutsushi/tagbar'
 
 " Switch between different file projections (alternatives e.g. *.h => *.cpp)
@@ -290,7 +297,7 @@ Plugin 'tpope/vim-unimpaired'
 " GitGutter
 " Plugin 'airblade/vim-gitgutter'
 
-" Dart language support 
+" Dart language support
 " Plugin 'dart-lang/dart-vim-plugin'
 
 " LSC Language Server Protocol (LSP) Client (e.g used for Dart)
@@ -317,7 +324,7 @@ Plugin 'fatih/vim-go'
 " Server Protocol client, like ale.
 " Plugin 'dense-analysis/ale'
 
-" Viewer & Finder for LSP symbols and tags 
+" Viewer & Finder for LSP symbols and tags
 " Plugin 'liuchengxu/vista.vim'
 
 " Fast and featureful file manager in vim/neovim powered by nnn
@@ -399,13 +406,13 @@ let g:ycm_auto_trigger = 1
 " let g:ycm_server_python_interpreter='/usr/bin/python'
 let g:ycm_show_diagnostics_ui = 0
 
-" Sessions 
+" Sessions
 " :mksession ~/.vim/sessions/my-session.vim
 " :source ~/.vim/sessions/my-session.vim
-" When the cycle repeats as you rearrange the furniture, just overwite the old  session by using 
+" When the cycle repeats as you rearrange the furniture, just overwite the old  session by using
 " :mks!
 
-" NERDTree file filters 
+" NERDTree file filters
 " let NERDTreeIgnore=['.git$[[dir]]', '.swp']
 " let NERDTreeIgnore=['.cpp']
 
@@ -414,7 +421,7 @@ let g:ycm_show_diagnostics_ui = 0
 "augroup AutoSaveFolds
 "    autocmd!
 "    autocmd BufWinLeave * mkview
-"    autocmd BufWinEnter * silent! loadview 
+"    autocmd BufWinEnter * silent! loadview
 "augroup END
 
 fun! ToggleCC()
@@ -489,7 +496,7 @@ imap jk <Esc>
 map <Leader>p :call PasteFromClipboard()<CR>
 map <Leader>w :call ToggleW()<CR>
 
-" search in selection 
+" search in selection
 " by using the \%V atom
 " press Alt-/ in order to automatically fill in a 'range' for your search
 "  When you have selected the area you want to search, press Alt-/. The visual
