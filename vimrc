@@ -258,7 +258,7 @@ Plugin 'junegunn/fzf.vim'
 " Plugin 'octol/vim-cpp-enhanced-highlight'
 
 " tagbar 
-" Plugin 'majutsushi/tagbar'
+Plugin 'majutsushi/tagbar'
 
 " Switch between different file projections (alternatives e.g. *.h => *.cpp)
 " Plugin 'tpope/vim-projectionist'
