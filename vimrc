@@ -16,7 +16,9 @@ set mouse=n
 set ttymouse=xterm2
 
 filetype plugin indent on
+" size of the tab
 set tabstop=4
+" size of indentation
 set shiftwidth=4
 set expandtab
 
@@ -30,6 +32,7 @@ autocmd FileType javascript.jsx setlocal shiftwidth=2 tabstop=2
 autocmd FileType dart setlocal shiftwidth=2 tabstop=2
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
 autocmd FileType go setlocal noexpandtab
+autocmd FileType c setlocal noexpandtab 
 
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file
@@ -172,7 +175,12 @@ let g:markdown_fenced_languages = ['html', 'python', 'vim', 'c']
 
 " Highlight current line (horizontal line)
 " See hi CursorLine below
-set cursorline
+" set cursorline
+augroup CursorLine
+  au!
+  autocmd VimEnter,WinEnter,BufWinEnter,FocusGained,CmdwinEnter,InsertLeave * setlocal cursorline
+  autocmd WinLeave,FocusLost,CmdwinLeave,InsertEnter * setlocal nocursorline
+augroup END
 
 " logs highlight
 " autocmd BufNewFile,BufReadPost *messages* :set filetype=messages
@@ -188,40 +196,40 @@ set cursorline
 ":set wrap!
 ":set nowrap
 
-" BEGIN: Color Scheme
-" list of colors:
-" :h cterm-colors
-" list of types to highlight:
-" :hi
-" hi CursorLine cterm=NONE ctermbg=darkgray ctermfg=white guibg=darkgray guifg=white
-hi CursorLine cterm=NONE ctermbg=0 guibg=lightgray
-hi Search cterm=NONE ctermfg=black ctermbg=yellow
-hi String cterm=NONE ctermfg=brown
-" hi String cterm=NONE ctermfg=4
-hi Keyword cterm=NONE ctermfg=blue
-hi Statement cterm=NONE ctermfg=blue
-hi Type cterm=NONE ctermfg=blue
-" hi DiffAdd cterm=NONE ctermfg=black ctermbg=LightBlue
+"  " BEGIN: Color Scheme
+"  " list of colors:
+"  " :h cterm-colors
+"  " list of types to highlight:
+"  " :hi
+"  " hi CursorLine cterm=NONE ctermbg=darkgray ctermfg=white guibg=darkgray guifg=white
+"  hi CursorLine cterm=NONE ctermbg=0 guibg=lightgray
+"  hi Search cterm=NONE ctermfg=black ctermbg=yellow
+"  hi String cterm=NONE ctermfg=brown
+"  " hi String cterm=NONE ctermfg=4
+"  hi Keyword cterm=NONE ctermfg=blue
+"  hi Statement cterm=NONE ctermfg=blue
+"  hi Type cterm=NONE ctermfg=blue
+"  " hi DiffAdd cterm=NONE ctermfg=black ctermbg=LightBlue
 hi DiffAdd cterm=NONE ctermfg=white ctermbg=green
 hi DiffDelete cterm=NONE ctermfg=white ctermbg=red
 hi DiffChange cterm=NONE ctermfg=white ctermbg=LightMagenta
 hi DiffText cterm=NONE ctermfg=white
-" hi Function cterm=NONE ctermfg=blue
-" hi Function cterm=NONE ctermfg=5
-" hi Function cterm=NONE ctermfg=white
-" hi Function cterm=NONE ctermfg=lightgreen
-hi Function cterm=NONE ctermfg=darkgreen
-hi Constant cterm=NONE ctermfg=blue
-hi SpellBad cterm=NONE ctermfg=black
-hi Folded cterm=NONE ctermfg=gray ctermbg=none
-" hi ColorColumn ctermbg=8
-hi ColorColumn ctermbg=6
-hi Comment cterm=NONE ctermfg=gray
-hi Visual cterm=NONE ctermfg=black ctermbg=white
-" LSClient uses this for Linter
-hi SpellCap cterm=NONE ctermfg=white ctermbg=brown
-
-" END: Color Scheme
+"  " hi Function cterm=NONE ctermfg=blue
+"  " hi Function cterm=NONE ctermfg=5
+"  " hi Function cterm=NONE ctermfg=white
+"  " hi Function cterm=NONE ctermfg=lightgreen
+"  hi Function cterm=NONE ctermfg=darkgreen
+"  hi Constant cterm=NONE ctermfg=blue
+"  hi SpellBad cterm=NONE ctermfg=black
+ hi Folded cterm=NONE ctermfg=gray ctermbg=none
+"  " hi ColorColumn ctermbg=8
+"  hi ColorColumn ctermbg=6
+"  hi Comment cterm=NONE ctermfg=gray
+"  hi Visual cterm=NONE ctermfg=black ctermbg=white
+"  " LSClient uses this for Linter
+"  hi SpellCap cterm=NONE ctermfg=white ctermbg=brown
+"  
+"  " END: Color Scheme
 
 " completion using a syntax file
 " enable omni completion using a syntax file:
@@ -358,7 +366,13 @@ Plugin 'fatih/vim-go'
 " or otherwise insufficient, by looking at other files of the same type in the
 " current and parent directories. In lieu of adjusting 'softtabstop',
 " 'smarttab' is enabled.
-Plugin 'tpope/vim-sleuth'
+" NOTE: this think doesn't guess properly e.g. for new file. Messing with
+" default settings. Disabling it.
+" Plugin 'tpope/vim-sleuth'
+
+" This plugin formats your code with specific coding style using clang-format.
+" :Clang*
+Plugin 'rhysd/vim-clang-format'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -560,3 +574,13 @@ nnoremap <silent> <Leader>t        :BTags<CR>
 nnoremap <silent> <Leader>T        :TagbarOpenAutoClose<CR>
 nnoremap <silent> <Leader>nn       :NERDTreeToggle<CR>
 nnoremap <silent> <Leader>nf       :NERDTreeFind<CR>
+
+" autocmd InsertEnter * setlocal nocursorline
+" autocmd InsertLeave * setlocal cursorline
+" autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+" autocmd WinLeave * setlocal nocursorline
+" autocmd FocusLost * setlocal nocursorline
+" autocmd FocusGained * setlocal cursorline
+
+let g:vitality_tmux_can_focus = 1
+
