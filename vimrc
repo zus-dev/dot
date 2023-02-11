@@ -21,6 +21,11 @@ set tabstop=4
 " size of indentation
 set shiftwidth=4
 set expandtab
+" https://stackoverflow.com/questions/35156448/autoindent-smartindent-and-indentexpr
+" #, the line is automatically reindenting to the very beginning of the line:
+" #<-- CURSOR IS HERE
+" it's an effect of the smartindent option, so to fix it, I just have to run
+" :set nosi (or disable it in my .vimrc).
 
 " Remove Trailing Whitespace on Save
 " autocmd BufWritePre * :%s/\s\+$//e
@@ -33,6 +38,8 @@ autocmd FileType dart setlocal shiftwidth=2 tabstop=2
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
 autocmd FileType go setlocal noexpandtab
 autocmd FileType c setlocal noexpandtab 
+autocmd FileType uxntal setlocal iskeyword+=- iskeyword+=? noexpandtab nosmartindent
+
 
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file
@@ -171,6 +178,9 @@ set nospell
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 " Highlight syntax inside Markdown
 let g:markdown_fenced_languages = ['html', 'python', 'vim', 'c']
+
+" syntax highlight for QuakeC 
+au BufNewFile,BufFilePre,BufRead *.qc set filetype=quakec
 
 
 " Highlight current line (horizontal line)
